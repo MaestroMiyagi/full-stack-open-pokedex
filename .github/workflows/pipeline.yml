@@ -46,10 +46,5 @@ jobs:
           path: playwright-report/
           retention-days: 30
       
-      - name: Deploy to Render
-        if: ${{ github.event_name == 'push' }}
-        uses: sws2apps/render-deployment@main
-        with:
-          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
-          apiKey: ${{ secrets.RENDER_API_KEY }}
-          multipleDeployment: false #optional, default true           
+      - name: Trigger deployment
+          run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}      
