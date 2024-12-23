@@ -7,6 +7,7 @@
     "start": "webpack-dev-server --open --mode development",
     "start-prod": "node app.js",
     "test": "jest",
+    "test:e2e": "npx playwright test",
     "eslint": "eslint './**/*.{js,jsx}'",
     "build": "webpack --mode production"
   },
@@ -54,6 +55,7 @@
     "react-router-dom": "^6.21.1"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testPathIgnorePatterns": ["e2e-tests"]
   }
 }
