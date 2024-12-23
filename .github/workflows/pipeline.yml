@@ -31,7 +31,11 @@ jobs:
         env:
           NODE_ENV: development
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
         env:
           CI: true
+
+      - name: Run Playwright tests
+        run: npx playwright test
+      
