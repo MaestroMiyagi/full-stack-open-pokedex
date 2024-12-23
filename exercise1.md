@@ -1,0 +1,5 @@
+For linting I usually use Husky to lint every time I do a commit, but I can probably set it up to do it when I push to the main branch. For testing, I love to use vitest, because jest is a little bit complicated for me, and I also love the verbose report that includes. Finally, for building, I just use npm build while using either Nextjs or Astro framework I don't know any special tool for building but I do use cypress for integration testing when I push to the main branch.
+
+GitHub is not the only Git repository in the cloud, there's also GitLab that provides its GitLab actions just like GitHub and there are also other solutions from the top cloud providers like Google, AWS, Azure, etc. I believe they are different from Github and Jenkins in how you use them and configure your environment, but their purpose is the same.
+
+It would be better in a cloud-based-environment because it's easier to set up and the scale it's not that big so we don't need a specialized environment like if we were to use Jenkins. I think first we need to know the project size and the hardware limitations to make those decisions.
