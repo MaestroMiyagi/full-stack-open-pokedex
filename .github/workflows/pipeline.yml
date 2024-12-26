@@ -24,21 +24,16 @@ jobs:
       - run: npm run build
       - name: Notify build failure
         if: failure()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.1
         with:
-          severity: error
-          details: Build Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.YOUR_DISCORD_WEBHOOK_URL }}
+          status: error
+          message: Build Failed!
       - run: npm run test
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: npx playwright test
-      - uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
 
   deployment_pipeline:
     if: ${{ github.event_name == 'push' }}
@@ -54,40 +49,24 @@ jobs:
         run: npm run build
       - name: Notify build failure
         if: failure()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.1
         with:
-          severity: error
-          details: Build Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.YOUR_DISCORD_WEBHOOK_URL }}
+          status: error
+          message: Build Failed!
       - name: Trigger deployment
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
       - name: Notify deployment success
         if: success()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.1
         with:
-          severity: info
-          details: Deployment Successful!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Check the deployed service URL
-        uses: jtalk/url-health-check-action@v4
-        with:
-          url: https://full-stack-open-pokedex-jq9u.onrender.com/health
+          webhook_url: ${{ secrets.YOUR_DISCORD_WEBHOOK_URL }}
+          status: success
+          message: Deployment Successful!
       - name: Notify deployment failure
         if: failure()
-        uses: rjstone/discord-webhook-notify@v1
+        uses: johnnyhuy/actions-discord-git-webhook@v1.0.1
         with:
-          severity: error
-          details: Deployment Failed!
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-
-  tag_release:
-    needs: [deployment_pipeline]
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' && !contains(join(toJson(github.event.commits.*.message)), '#skip') }}
-        uses: anothrNick/github-tag-action@1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
+          webhook_url: ${{ secrets.YOUR_DISCORD_WEBHOOK_URL }}
+          status: error
+          message: Deployment Failed!
