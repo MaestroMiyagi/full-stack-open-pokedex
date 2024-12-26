@@ -22,6 +22,13 @@ jobs:
       - name: Check Style
         run: npm run eslint
       - run: npm run build
+      - name: Notify build failure
+        if: failure()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: error
+          details: Build Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - run: npm run test
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
@@ -45,12 +52,33 @@ jobs:
         run: npm install
       - name: Build app
         run: npm run build
+      - name: Notify build failure
+        if: failure()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: error
+          details: Build Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Trigger deployment
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+      - name: Notify deployment success
+        if: success()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: info
+          details: Deployment Successful!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Check the deployed service URL
         uses: jtalk/url-health-check-action@v4
         with:
           url: https://full-stack-open-pokedex-jq9u.onrender.com/health
+      - name: Notify deployment failure
+        if: failure()
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: error
+          details: Deployment Failed!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   tag_release:
     needs: [deployment_pipeline]
