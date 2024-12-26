@@ -8,7 +8,7 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/version", (req, res) => {
-  res.send("8");
+  res.send("9");
 });
 
 app.use(express.static("dist"));
